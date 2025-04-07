@@ -37,7 +37,7 @@ def ComputeDiscriminativeMaps(tab,y_pred,dimOfinput):
 
 # generate the bubble masks
 def generateBubbleMask(dimOfinput=(28,28), nbMasks=10, nbBubbles=10, bubbleSize=[4, 4]):
-	nFeatures = np.product(dimOfinput) # np.asarray(dimOfinput)[0]*np.asarray(dimOfinput)[1]
+	nFeatures = np.prod(dimOfinput) # np.asarray(dimOfinput)[0]*np.asarray(dimOfinput)[1]
 	masks = np.random.rand(nbMasks,nFeatures)
 
 	for iSample in range(nbMasks):
@@ -58,20 +58,20 @@ def generateProbingSamples(x_train_set = [], x_test_set = [], dimOfinput=(28,28)
 	if probingMethod == 'bubbles':
 		N_probing_samples = bubbleMasks.shape[0]
 		if samplesMethod == 'pseudoRandom':
-			pca_noise = PCA(n_components= nDim_pca, svd_solver='auto', whiten=True).fit(np.reshape(x_test_set,(x_test_set.shape[0],np.product(dimOfinput))))
+			pca_noise = PCA(n_components= nDim_pca, svd_solver='auto', whiten=True).fit(np.reshape(x_test_set,(x_test_set.shape[0],np.prod(dimOfinput))))
 			probingSamples = pca_noise.inverse_transform(np.random.randn(bubbleMasks.shape[0],nDim_pca)) * bubbleMasks
 		elif samplesMethod == 'gaussianNoise':
 			probingSamples = np.random.randn(bubbleMasks.shape[0],bubbleMasks.shape[1]) * bubbleMasks
 		elif samplesMethod == 'trainSet':
-			probingSamples =  np.reshape(x_train_set,(x_train_set.shape[0],np.product(dimOfinput)))[0:bubbleMasks.shape[0],:] * bubbleMasks
+			probingSamples =  np.reshape(x_train_set,(x_train_set.shape[0],np.prod(dimOfinput)))[0:bubbleMasks.shape[0],:] * bubbleMasks
 	elif probingMethod == 'revcor':
 		if samplesMethod == 'pseudoRandom':
-			pca_noise = PCA(n_components= nDim_pca, svd_solver='auto', whiten=True).fit(np.reshape(x_test_set,(x_test_set.shape[0],np.product(dimOfinput))))
+			pca_noise = PCA(n_components= nDim_pca, svd_solver='auto', whiten=True).fit(np.reshape(x_test_set,(x_test_set.shape[0],np.prod(dimOfinput))))
 			probingSamples = pca_noise.inverse_transform(np.random.randn(nbRevcorTrials,nDim_pca))
 		elif samplesMethod == 'gaussianNoise':
-			probingSamples = np.random.randn(nbRevcorTrials,np.product(dimOfinput)) 
+			probingSamples = np.random.randn(nbRevcorTrials,np.prod(dimOfinput)) 
 		elif samplesMethod == 'trainSet':
-			probingSamples =  np.reshape(x_train_set,(x_train_set.shape[0],np.product(dimOfinput)))[0:nbRevcorTrials,:]  + np.random.randn(nbRevcorTrials,np.product(dimOfinput)) / normalizeNoiseCoeff
+			probingSamples =  np.reshape(x_train_set,(x_train_set.shape[0],np.prod(dimOfinput)))[0:nbRevcorTrials,:]  + np.random.randn(nbRevcorTrials,np.prod(dimOfinput)) / normalizeNoiseCoeff
 	return probingSamples
 
 
